@@ -15,7 +15,7 @@
         async function updateESP() {
             try {
                 // O caminho depende de onde o Delta salva os arquivos (ex: /storage/emulated/0/Delta/ghost_pos.json)
-                const response = await fetch('file:///sdcard/Delta/ghost_pos.json');
+                const response = await fetch('file:///storage/emulated/0/Delta/ghost_pos.json');
                 const players = await response.json();
                 
                 const canvas = document.getElementById('canvas');
