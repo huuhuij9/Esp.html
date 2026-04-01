@@ -1,1 +1,41 @@
-# Esphtml
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { margin: 0; overflow: hidden; background: transparent; }
+        #canvas { width: 100vw; height: 100vh; }
+        .esp-box { position: absolute; border: 2px solid #00FF00; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        // Este script vai tentar ler o arquivo 'ghost_pos.json'
+        // que o Delta está salvando na pasta do celular.
+        async function updateESP() {
+            try {
+                // O caminho depende de onde o Delta salva os arquivos (ex: /storage/emulated/0/Delta/ghost_pos.json)
+                const response = await fetch('file:///sdcard/Delta/ghost_pos.json');
+                const players = await response.json();
+                
+                const canvas = document.getElementById('canvas');
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                players.forEach(p => {
+                    // Lógica simples de conversão de 3D para 2D (Overlay)
+                    // Você precisará ajustar os multiplicadores conforme sua tela
+                    let screenX = (p.x * 10) + (window.innerWidth / 2);
+                    let screenY = (p.z * 10) + (window.innerHeight / 2);
+                    
+                    ctx.strokeStyle = "#00FF00";
+                    ctx.strokeRect(screenX - 25, screenY - 50, 50, 100);
+                    ctx.fillStyle = "white";
+                    ctx.fillText(p.n, screenX - 20, screenY - 55);
+                });
+            } catch (e) {}
+        }
+        setInterval(updateESP, 50); // Atualiza 20 vezes por segundo
+    </script>
+</body>
+</html>
